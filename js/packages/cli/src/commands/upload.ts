@@ -71,19 +71,25 @@ export async function upload(
     const imageName = path.basename(image);
     const index = imageName.replace(EXTENSION_PNG, '');
 
+    const image_trans = image.split('.')[0] + '_transparent.jpg';
+    const transName = path.basename(image_trans);
+
     log.debug(`Processing file: ${i}`);
     if (i % 50 === 0) {
       log.info(`Processing file: ${i}`);
     }
 
     let link = cacheContent?.items?.[index]?.link;
+
     if (!link || !cacheContent.program.uuid) {
       const manifestPath = image.replace(EXTENSION_PNG, '.json');
       const manifestContent = fs
         .readFileSync(manifestPath)
         .toString()
         .replace(imageName, 'image.png')
-        .replace(imageName, 'image.png');
+
+        .replace(transName, 'image_transparent.jpg')
+        .replace(transName, 'image_transparent.jpg');
       const manifest = JSON.parse(manifestContent);
 
       const manifestBuffer = Buffer.from(JSON.stringify(manifest));
@@ -96,7 +102,7 @@ export async function upload(
             maxNumberOfLines: new BN(totalNFTs),
             symbol: manifest.symbol,
             sellerFeeBasisPoints: manifest.seller_fee_basis_points,
-            isMutable: true,
+            isMutable: false,
             maxSupply: new BN(0),
             retainAuthority: retainAuthority,
             creators: manifest.properties.creators.map(creator => {
@@ -130,6 +136,7 @@ export async function upload(
               anchorProgram,
               env,
               image,
+              image_trans,
               manifestBuffer,
               manifest,
               index,
@@ -157,6 +164,7 @@ export async function upload(
   }
 
   const keys = Object.keys(cacheContent.items);
+
   try {
     await Promise.all(
       chunks(Array.from(Array(keys.length).keys()), 1000).map(
