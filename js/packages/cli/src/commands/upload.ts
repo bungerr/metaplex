@@ -87,7 +87,7 @@ export async function upload(
         .readFileSync(manifestPath)
         .toString()
         .replace(imageName, 'image.png')
-
+        .replace(imageName, 'image.png')
         .replace(transName, 'image_transparent.jpg')
         .replace(transName, 'image_transparent.jpg');
       const manifest = JSON.parse(manifestContent);
