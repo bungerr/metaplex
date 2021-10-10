@@ -33,3 +33,5 @@ hfuzz_workspace
 js/packages/web/.env
 traits
 traits-configuration.json
+js/packages/fair-launch/.env
+js/tmp.txt

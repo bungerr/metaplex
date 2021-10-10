@@ -25,6 +25,7 @@ export async function arweaveUpload(
   anchorProgram,
   env,
   image,
+  image_transparent,
   manifestBuffer,
   manifest,
   index,
@@ -55,6 +56,12 @@ export async function arweaveUpload(
     filename: `image.png`,
     contentType: 'image/png',
   });
+
+  data.append('file[]', fs.createReadStream(image_transparent), {
+    filename: `image_transparent.jpg`,
+    contentType: 'image/png',
+  });
+
   data.append('file[]', manifestBuffer, 'metadata.json');
 
   const result = await upload(data, manifest, index);
